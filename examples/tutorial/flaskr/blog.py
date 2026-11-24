@@ -1,3 +1,10 @@
+#Descrição: Refatoração da aplicação Flaskr para arquitetura MVC utilizando Flask-SQLAlchemy, Bootstrap 5, upload de arquivos e cálculos financeiros em memória
+#Nome_arquivo: blog.py
+#Nome_exercicio: Prova Desenvolvimento Web 2 - 24/11/2026
+#Nome: Eduardo Rodrigues de Novaes
+#email: eduardo.novaes@aluno.cps.sp.gov.br
+#Turma: 2º turma DSM Fatec Olimpia
+
 import os
 import uuid
 from flask import (
