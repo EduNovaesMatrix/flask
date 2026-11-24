@@ -1,28 +1,48 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Posts{% endblock %}</h1>
-  {% if g.user %}
-    <a class="action" href="{{ url_for('blog.create') }}">New</a>
-  {% endif %}
+  <div class="d-flex justify-content-between align-items-center">
+    <h1 class="h3 mb-0">{% block title %}Publicações{% endblock %}</h1>
+    {% if g.user %}
+      <a class="btn btn-primary" href="{{ url_for('blog.create') }}">+ Novo Post</a>
+    {% endif %}
+  </div>
 {% endblock %}
 
 {% block content %}
-  {% for post in posts %}
-    <article class="post">
-      <header>
-        <div>
-          <h1>{{ post['title'] }}</h1>
-          <div class="about">by {{ post['username'] }} on {{ post['created'].strftime('%Y-%m-%d') }}</div>
+  {% if posts %}
+    <div class="row g-4">
+      {% for post in posts %}
+        <div class="col-md-6 col-lg-4">
+          <div class="card shadow-sm h-100">
+            {% if post.imagem_post %}
+              <img src="{{ url_for('static', filename='uploads/' + post.imagem_post) }}"
+                   class="card-img-top"
+                   alt="Imagem de {{ post.title }}"
+                   style="height: 200px; object-fit: cover;">
+            {% endif %}
+            <div class="card-body d-flex flex-column">
+              <h2 class="h5 card-title">{{ post.title }}</h2>
+              <p class="text-muted small mb-2">
+                Por <strong>{{ post.author.username }}</strong> em {{ post.created.strftime('%d/%m/%Y %H:%M') }}
+              </p>
+              <p class="card-text flex-grow-1">{{ post.body }}</p>
+              {% if g.user and g.user.id == post.author_id %}
+                <div class="mt-3 pt-2 border-top d-flex justify-content-end">
+                  <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('blog.update', id=post.id) }}">Editar</a>
+                </div>
+              {% endif %}
+            </div>
+          </div>
         </div>
-        {% if g.user['id'] == post['author_id'] %}
-          <a class="action" href="{{ url_for('blog.update', id=post['id']) }}">Edit</a>
-        {% endif %}
-      </header>
-      <p class="body">{{ post['body'] }}</p>
-    </article>
-    {% if not loop.last %}
-      <hr>
-    {% endif %}
-  {% endfor %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-light border text-center py-5">
+      <p class="mb-2 text-muted">Nenhuma publicação encontrada ainda.</p>
+      {% if g.user %}
+        <a href="{{ url_for('blog.create') }}" class="btn btn-primary btn-sm">Criar primeira publicação</a>
+      {% endif %}
+    </div>
+  {% endif %}
 {% endblock %}
